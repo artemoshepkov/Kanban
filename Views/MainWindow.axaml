@@ -1,0 +1,178 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MyKanban.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="700"
+        x:Class="MyKanban.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MyKanban"
+        Width="700" Height="750">
+
+  <Window.Styles>
+    <Style Selector="Button.button">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="18"/>
+    </Style>
+
+    <Style Selector="TextBlock.textBlock">
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="18"/>
+    </Style>
+
+    <Style Selector="TextBox.textBox">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+  </Window.Styles>
+  
+  
+    
+  <Grid ColumnDefinitions="*" RowDefinitions="auto, *">
+
+    <DockPanel Grid.Row="0">
+      <Menu DockPanel.Dock="Top" VerticalAlignment="Top" Background="#e2e8e4">
+        
+        <MenuItem Header="File">
+          
+          <MenuItem Name="BtnNew" Header="New"/>
+          <MenuItem Name="BtnSave" Header="Save"/>
+          <MenuItem Name="BtnLoad" Header="Load"/>
+          <MenuItem Header="Exit" Click="ClickExit"/>
+
+        </MenuItem>
+        
+        <MenuItem Header="About" Click="ClickAbout"/>
+
+     </Menu>
+    </DockPanel>
+
+    <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1" >
+
+      <Grid ColumnDefinitions="*, *, *">
+
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="0">
+           <Grid RowDefinitions="auto, *, auto" Background="#6eb5c0">
+
+            <TextBlock Text="Planned" Classes="textBlock" Grid.Row="0"/>
+
+               <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1">
+                 <ListBox Items="{Binding NotesTaskPlanned}" VirtualizationMode="None" SelectionMode="Single" Background="#6eb5c0">
+                   <ListBox.ItemTemplate>
+                     <DataTemplate>
+                       
+                       <Expander Header="{Binding Header}" >
+                         <Grid RowDefinitions="auto, auto, auto, auto, auto, auto, auto" MinWidth="180">
+                           
+                           <TextBlock Margin="0 0 0 10" Grid.Row="0" Grid.Column="0">Header:</TextBlock>
+
+                           <TextBox Text="{Binding Header}" Grid.Row="1" Grid.Column="0" Classes="textBox"/>
+
+                           <TextBlock Margin="0 10 0 10" Grid.Row="2" Grid.Column="0">Task:</TextBlock>
+                           
+                           <TextBox Text="{Binding TaskNote}" Margin="0 0 0 10" Height="120" Classes="textBox" Grid.Row="3" Grid.Column="0"/>
+
+                           <Image Source="{Binding Image}" Grid.Row="4" Grid.Column="0"/>
+
+                           <Button Margin="0 0 0 10" Content="Add image" Grid.Row="5" Grid.Column="0" Click="AddImage" Name="AddImage" Classes="button"/>
+                           
+                           <Button Content="Delete" Grid.Row="6" Grid.Column="0" Command="{Binding $parent[Window].DataContext.DeleteItemList}" CommandParameter="{Binding $self.DataContext}" Classes="button"/>
+                           
+                         </Grid>
+                       </Expander>
+                     </DataTemplate>
+                   </ListBox.ItemTemplate>
+                 </ListBox>    
+             </Border>
+
+            <Button Content="Add" Command="{Binding AddNoteTaskCommand}" CommandParameter="Planned" Classes="button" Grid.Row="2" Background="#006c84"/>
+
+          </Grid>
+        </Border>
+
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1">
+          <Grid RowDefinitions="auto, *, auto" Background="#6eb5c0">
+
+            <TextBlock Text="In progress" Classes="textBlock" Grid.Row="0"/>
+
+            <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1">
+              <ListBox VirtualizationMode="None" Items="{Binding NotesTaskInProgress}" Background="#6eb5c0">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <Expander Header="{Binding Header}">
+                      <Grid RowDefinitions="auto, auto, auto, auto, auto, auto, auto" MinWidth="180">
+
+                        <TextBlock Margin="0 0 0 10" Grid.Row="0" Grid.Column="0">Header:</TextBlock>
+
+                        <TextBox Text="{Binding Header}" Grid.Row="1" Grid.Column="0"/>
+
+                        <TextBlock Margin="0 10 0 10" Grid.Row="2" Grid.Column="0">Task:</TextBlock>
+
+                        <TextBox Text="{Binding TaskNote}" Margin="0 0 0 10" Height="120" Grid.Row="3" Grid.Column="0"/>
+
+                        <Image Source="{Binding Image}" Grid.Row="4" Grid.Column="0"/>
+
+                        <Button Margin="0 0 0 10" Content="Add image" Click="AddImage" Name="AddImage" Classes="button" Grid.Row="5" Grid.Column="0"/>
+                        
+                        <Button Content="Delete" Grid.Row="6" Grid.Column="0" Command="{Binding $parent[Window].DataContext.DeleteItemList}" CommandParameter="{Binding $self.DataContext}" Classes="button"/>
+
+                      </Grid>
+                    </Expander>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </Border>
+
+            <Button Content="Add"  Command="{Binding AddNoteTaskCommand}" CommandParameter="InProgress" Classes="button" Grid.Row="2" Background="#006c84"/>
+
+          </Grid>
+        </Border>
+
+        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2">
+          <Grid RowDefinitions="auto, *, auto" Background="#6eb5c0">
+
+            <TextBlock Text="Completed" Classes="textBlock" Grid.Row="0"/>
+
+            <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1">
+              <ListBox VirtualizationMode="None" Items="{Binding NotesTaskCompleted}" Background="#6eb5c0">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <Expander Header="{Binding Header}">
+                      <Grid RowDefinitions="auto, auto, auto, auto, auto, auto, auto" MinWidth="180">
+
+                        <TextBlock Margin="0 0 0 10" Grid.Row="0" Grid.Column="0">Header:</TextBlock>
+
+                        <TextBox Text="{Binding Header}" Grid.Row="1" Grid.Column="0"/>
+
+                        <TextBlock Margin="0 10 0 10" Grid.Row="2" Grid.Column="0">Task:</TextBlock>
+
+                        <TextBox Text="{Binding TaskNote}" Margin="0 0 0 10" Height="120" Grid.Row="3" Grid.Column="0"/>
+
+                        <Image Source="{Binding Image}" Grid.Row="4" Grid.Column="0"/>
+
+                        <Button Margin="0 0 0 10" Content="Add image" Grid.Row="5" Grid.Column="0" Click="AddImage" Name="AddImage" Classes="button"/>
+
+                        <Button Content="Delete" Grid.Row="6" Grid.Column="0" Command="{Binding $parent[Window].DataContext.DeleteItemList}" CommandParameter="{Binding $self.DataContext}" Classes="button"/>
+
+                      </Grid>
+                    </Expander>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </Border>
+
+            <Button Content="Add"  Command="{Binding AddNoteTaskCommand}" CommandParameter="Completed" Classes="button" Grid.Row="2" Background="#006c84"/>
+
+          </Grid>
+        </Border>
+
+
+      </Grid>
+      
+    </Border>
+   
+
+  </Grid>  
+  
+</Window>
